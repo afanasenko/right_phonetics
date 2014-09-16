@@ -113,15 +113,17 @@
 		function RP_OnLoadContent(data) {
 			
 			$( '#btn-check' ).button( "option", "disabled", true );			
+
+			$("#exercise-content").append('<div id="word_sandbox" style="height:2em"></div>');
 			
 			console.log(data);			
-
+			
 			$.each( data, function( key, val ) {
 
 				if (key == "cue")
 					$("#exercise-content").append("<input type=\"hidden\" id=\"cue\" value=\""+val+"\"/>");
 				else {
-					$("#exercise-content").append("<p id=\""+key+"\">"+val+"</p>")
+					$("#word_sandbox").append("<p id=\""+key+"\">"+val+"</p>")
 					$("#"+key).draggable({ containment : "#exercise-body", revert: true })
 						.addClass("draggable_word");				
 				}

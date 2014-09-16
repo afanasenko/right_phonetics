@@ -10,8 +10,9 @@
 	{
 		$cue_pattern = 1 + rand() % 2 ;
 		$antipattern = $cue_pattern == 1 ? 2 : 1;
+		$nwords = 2;
 	
-		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=1 ORDER BY RAND() LIMIT 4;';
+		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=1 ORDER BY RAND() LIMIT ' . $nwords . ';';
 		
 		$res = mysql_query($query);
 		if (!$res)
@@ -27,7 +28,7 @@
 			$result[$key] = $row;
 		}
 		
-		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=2 ORDER BY RAND() LIMIT 4;';
+		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=2 ORDER BY RAND() LIMIT ' . $nwords . ';';
 		
 		$res = mysql_query($query);
 		if (!$res)
@@ -49,9 +50,23 @@
 	
 	//------------------------------------------------------------------------------
 	// 2. Проверка ответа
-	function check_result($word_id, $sylltype)
+	function check_result($items)
 	{
-		return false;
+		$wrong_words = array();
+
+		foreach ($items as $key => $val)		
+		{
+			//$query = 'SELECT * FROM `syllable_choose` WHERE `id`=' . $key . ' AND `pattern`=' . $val . ';';
+
+//			$res = mysql_query($query);
+//			if (!$res)
+//				return false;
+				
+//			if (!mysql_num_rows($res))
+				$wrong_words[] = $val['pattern'];
+		}
+
+		return $wrong_words;
 	}
 
 //*****************************************************************************************************	
@@ -79,12 +94,11 @@
 			$.each( data, function( key, val ) {
 
 				$("#word_sandbox").append("<p id=\""+key+"\">"+val+"</p>")
-				$("#"+key).draggable({ revert: true })
+				$("#"+key).draggable({ helper: "clone", opacity : 0.5 })
 					.addClass("draggable_word");				
 			});			
 			
-			$("#exercise-content").append("<div class=\"dropbin\" id=\"bin1\" style=\"border: 1px solid; height: 5em\"></div>");			
-			$("#exercise-content").append("<div class=\"dropbin\" id=\"bin2\" style=\"border: 1px solid; height: 5em\"></div>");						
+			$("#exercise-content").append("<table border='1' cellspacing='0' cellpadding='0' style='width:18em'><tr><td width='50%'>(c)cvc-v</td><td width='50%'>(c)cv-cv</td></tr><tr><td height='2em'><div style='height:100%'><div class='dropbin' syll-pattern='1'></div></div></td><td height='2em'><div style='height:100%'><div class='dropbin' syll-pattern='2'></div></div></td></tr></table>");			
 			
 			$( "div.dropbin" ).droppable({
 				accept : ".draggable_word",
@@ -94,7 +108,6 @@
 					//drag.hide();
 					drag.detach();
 					drag.appendTo(this);
-					//RP_CheckResult(drag.attr("id"))						;
 				}
 			});			
 		}
@@ -102,6 +115,55 @@
 		//-----------------------------------------------------------------------------		
 		// 5. Проверка результата
 		function RP_CheckResult() {
+			var chosen_items = [];
+			var chosen_obj = [];
+			//число слов в корзинах
+			var cnt = 0;			
+			$("#exercise-content").find("div.dropbin").each(function() {
+			
+				var container = $(this);
+				var syll_pattern = container.attr("syll-pattern");
+				container.children().each(function() {
+					cnt++;
+					var w = $(this);
+					chosen_items.push({word : w.attr("id"), pattern : syll_pattern});
+				});
+			});
+
+			console.log(chosen_items);				
+			console.log(JSON.stringify(chosen_items));				
+			
+			//ср. общее число слов
+			if (cnt != $(".draggable_word").length) {
+				alert('Please, drag all words first');
+				return;
+			}
+		
+			
+			// запрос результата
+			$.ajax({
+				url: "exercises/<?php echo $internal_name; ?>.php",
+				type: "POST",
+				data : {"action" : "check", "items" : JSON.stringify(chosen_items)},
+				dataType: "json",
+				success: function(data) {				
+
+					console.log(data);
+				
+					$("#answer-feedback").html(data["cheers"])
+						.show(100);
+					
+					if (data["success"]) {
+						$("#answer-feedback").removeClass("ui-state-error")
+											.addClass("ui-state-highlight");
+					}
+					else {
+						$("#answer-feedback").removeClass("ui-state-highlight")
+											.addClass("ui-state-error");
+					}
+				
+				}
+			});
 		}
 	</script>
 <?php
@@ -131,8 +193,21 @@
 		// 6. Ответ на запрос проверки результата
 		elseif (!strcmp($_POST['action'], 'check'))
 		{
-			$succ = intval(check_result());
-			$result = array('success' => $succ, 'cheers' => GetCheers($succ));
+			if (isset($_POST['items']))
+			{
+				$items = json_decode($_POST['items']);
+				$errors = check_result($items);
+				//$errors = $items;
+				
+				$succ = count($errors) ? 0 : 1;
+			}				
+			else
+			{
+				$errors = array();
+				$succ = 0;				
+			}
+				
+			$result = array('success' => $succ, 'cheers' => GetCheers($succ), 'feedback' => $errors);
 			print json_encode($result);			
 			exit();
 		}

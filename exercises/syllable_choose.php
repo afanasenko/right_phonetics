@@ -94,7 +94,7 @@
 				});
 			}		
 			else {
-				alert('Make your choice!');
+				alert('Please, make your choice!');
 			}
 		}
 	</script>

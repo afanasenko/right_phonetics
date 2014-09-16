@@ -64,8 +64,8 @@ create table `exercises`(`id_unit` int, `id_lesson` int, `id_exercise` int, `id_
 insert into `exercises` values
 (1, 1, 1, 1, '', 'Choose the right syllable pattern for the word.', 'syllable_choose'),
 (1, 1, 2, 2, '', 'Find the odd word based on its syllable pattern and drag it out to the bin.', 'syllable_odd'),
-(1, 1, 3, 3, '', '', 'syllable_group'),
-(1, 1, 4, 5, '', '', 'syllable_maze'),
+(1, 1, 3, 3, '', 'Drag each word to the right column.', 'syllable_group'),
+(1, 1, 4, 5, '', 'Find the way through the maze. You can move only vertically or horizontally, your steps being guided by the same syllable pattern (i. e. cvc-v or cv-cv).', 'syllable_maze'),
 --
 (1, 2, 1, 7, '', '', ''),
 (1, 2, 2, 2, '', '', ''),
@@ -73,7 +73,7 @@ insert into `exercises` values
 -- ==============================================================================
 (2, 1, 1, 1, 'Try to count', 'How many stresses does the word below have?', ''),
 (2, 1, 2, 3, 'Choose pattern', 'Group the words according to their stress pattern. Drag them to the right box.', ''),
-(2, 1, 3, 2, '', 'Tick the word which has a different stress pattern:', ''),
+(2, 1, 3, 2, 'Tick', 'Tick the word which has a different stress pattern:', ''),
 (2, 1, 4, 6, 'Try to mark', 'Mark the correct stress pattern in the word below:', ''),
 --
 (2, 2, 1, 8, 'Listen & Distinguish', 'Listen to the recording and choose the correct part of speach.', ''),
@@ -84,6 +84,9 @@ insert into `exercises` values
 --
 (2, 4, 1, 1, '', 'Choose the sentence where the highlighted word should be stressed.', ''),
 (2, 4, 2, 6, '', 'Check boxes before stressed syllables.', ''),
+-- ==============================================================================
+(3, 1, 1, 1, 'Unstressed vowel', 'What vowel should be pronounced in the unstressed(underlined) syllable in the following words?', ''),
+(3, 1, 2, 1, 'Missing vowel', 'What vowel is missing in the transcription of the word provided that the word has only one stress?', ''),
 -- ==============================================================================
 (5, 1, 1, 1, '', '', ''),
 (5, 1, 2, 4, '', '', ''),

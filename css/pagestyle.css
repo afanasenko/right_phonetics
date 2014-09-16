@@ -34,16 +34,16 @@ ul {
 	color: #006000;
 	background: #EBF7AF;
 	cursor: all-scroll;
-	padding: 0.2em;
-	margin: 2px;
+	padding: 0.1em;
+	margin: 0.1em;
 	width: 8em;
 }
 
 .dropbin {
-	display: table-cell;
-	border: 1px solid; 
-	height: 5em;
-	width: 10em;
+	min-height: 10em;
+	height: 100%;
+	width: 100%;
+	background: #eee;
 }
 
 .expanded {
@@ -121,7 +121,7 @@ li.exercise-handle.selected{
  
  #trashbin {
 	padding: .5em;
-	text-align:right;
+	text-align:left;
  }
 
 legend {
