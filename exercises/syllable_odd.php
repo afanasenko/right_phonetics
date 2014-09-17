@@ -69,8 +69,15 @@
 		//Функции размещаются в глобальном пространстве имен
 
 		//-----------------------------------------------------------------------------		
+		// Проверка результата (в действительности не используется)
+		function RP_CheckResult() {
+			$("#warning-message-text").html("Just drag a word to the bin!</br>Your answer will be checked automatically!");
+			$("#warning-message").dialog( "open" );
+		}		
+		
+		//-----------------------------------------------------------------------------		
 		// 4. Проверка результата
-		function RP_CheckResult(word_id) {
+		function RP_CheckResult_internal(word_id) {
 			// ключ, с которым сравнивается тип выбранного слова
 			var u = $("input#cue").val();
 		
@@ -94,10 +101,12 @@
 						if (data["success"]) {
 							$("#answer-feedback").removeClass("ui-state-error")
 												.addClass("ui-state-highlight");
+							$("#trashbin").html('<img src="./img/bin_happy.gif">');
 						}
 						else {
 							$("#answer-feedback").removeClass("ui-state-highlight")
 												.addClass("ui-state-error");
+							$("#trashbin").html('<img src="./img/bin_sad.gif">');
 						}
 					
 					}
@@ -112,9 +121,8 @@
 		// 5. Обработчик загрузки данных с сервера в результате выполнения запроса action=fetch
 		function RP_OnLoadContent(data) {
 			
-			$( '#btn-check' ).button( "option", "disabled", true );			
-
-			$("#exercise-content").append('<div id="word_sandbox" style="height:2em"></div>');
+			$("#exercise-content").append('<div id="word_sandbox" style="min-height:4em"></div>');
+			$("#btn_check").hide();
 			
 			console.log(data);			
 			
@@ -129,7 +137,7 @@
 				}
 			});
 			
-			$("#exercise-content").append("<div id=\"trashbin\"><img src=\"./img/bin.gif\"></div>");
+			$("#exercise-content").append('<div><div id="trashbin"><img src="./img/bin.gif"></div></div>');
 			$( "#trashbin" ).droppable({
 				accept : ".draggable_word",
 				drop : function(event, ui) {
@@ -137,7 +145,7 @@
 					//ui.draggable( "option", "disabled", true );
 					drag.hide();
 					//drag.appendTo(this);
-					RP_CheckResult(drag.attr("id"))						;
+					RP_CheckResult_internal(drag.attr("id"))						;
 				}
 			});		
 		}

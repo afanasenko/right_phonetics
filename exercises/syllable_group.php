@@ -10,7 +10,7 @@
 	{
 		$cue_pattern = 1 + rand() % 2 ;
 		$antipattern = $cue_pattern == 1 ? 2 : 1;
-		$nwords = 2;
+		$nwords = 5;		
 	
 		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=1 ORDER BY RAND() LIMIT ' . $nwords . ';';
 		
@@ -43,7 +43,7 @@
 			$result[$key] = $row;
 		}		
 
-		// Сортировка по случайному ключу - возможно, не лучший вариант.
+		// Сортировка по случайному ключу - возможно, не лучший вариант, но дает результат.
 		ksort($result);
 		return $result;	
 	}
@@ -56,14 +56,14 @@
 
 		foreach ($items as $key => $val)		
 		{
-			//$query = 'SELECT * FROM `syllable_choose` WHERE `id`=' . $key . ' AND `pattern`=' . $val . ';';
+			$query = 'SELECT * FROM `syllable_choose` WHERE `id`=' . $key . ' AND `pattern`=' . $val . ';';
 
-//			$res = mysql_query($query);
-//			if (!$res)
-//				return false;
+			$res = mysql_query($query);
+			if (!$res)
+				return false;
 				
-//			if (!mysql_num_rows($res))
-				$wrong_words[] = $val['pattern'];
+			if (!mysql_num_rows($res))
+				$wrong_words[] = $key;
 		}
 
 		return $wrong_words;
@@ -89,16 +89,20 @@
 		function RP_OnLoadContent(data) {
 		
 			console.log(data);	
-			$("#exercise-content").append('<div id="word_sandbox" style="height:8em"></div>');
+			$("#exercise-content").append('<div id="word-sandbox" style="min-height:8em"></div>');
 			
 			$.each( data, function( key, val ) {
 
-				$("#word_sandbox").append("<p id=\""+key+"\">"+val+"</p>")
-				$("#"+key).draggable({ helper: "clone", opacity : 0.5 })
+				$("#word-sandbox").append("<p id=\""+key+"\">"+val+"</p>")
+				$("#"+key).draggable({
+					helper: "clone",
+					revert: "invalid",
+					opacity : 0.5
+				})
 					.addClass("draggable_word");				
 			});			
 			
-			$("#exercise-content").append("<table border='1' cellspacing='0' cellpadding='0' style='width:18em'><tr><td width='50%'>(c)cvc-v</td><td width='50%'>(c)cv-cv</td></tr><tr><td height='2em'><div style='height:100%'><div class='dropbin' syll-pattern='1'></div></div></td><td height='2em'><div style='height:100%'><div class='dropbin' syll-pattern='2'></div></div></td></tr></table>");			
+			$("#exercise-content").append("<table border='1' cellspacing='0' cellpadding='0' style='width:18em'><tr><td width='50%'>(c)cvc-v</td><td width='50%'>(c)cv-cv</td></tr><tr><td height='2em'><div class='dropbin_wrap'><div class='dropbin' syll-pattern='1'></div></div></td><td height='2em'><div class='dropbin_wrap'><div class='dropbin' syll-pattern='2'></div></div></td></tr></table>");			
 			
 			$( "div.dropbin" ).droppable({
 				accept : ".draggable_word",
@@ -111,12 +115,11 @@
 				}
 			});			
 		}
-		
+
 		//-----------------------------------------------------------------------------		
 		// 5. Проверка результата
 		function RP_CheckResult() {
-			var chosen_items = [];
-			var chosen_obj = [];
+			var chosen_items = {};
 			//число слов в корзинах
 			var cnt = 0;			
 			$("#exercise-content").find("div.dropbin").each(function() {
@@ -126,20 +129,21 @@
 				container.children().each(function() {
 					cnt++;
 					var w = $(this);
-					chosen_items.push({word : w.attr("id"), pattern : syll_pattern});
+					var wid = w.attr("id");
+					chosen_items[wid] = syll_pattern;
 				});
 			});
 
-			console.log(chosen_items);				
-			console.log(JSON.stringify(chosen_items));				
+			//console.log(chosen_items);				
 			
-			//ср. общее число слов
+			//сравнение с общим числом слов
 			if (cnt != $(".draggable_word").length) {
-				alert('Please, drag all words first');
+			
+				$("#warning-message-text").html("Please, drag all words first!");
+				$("#warning-message").dialog( "open" );			
 				return;
 			}
-		
-			
+	
 			// запрос результата
 			$.ajax({
 				url: "exercises/<?php echo $internal_name; ?>.php",
@@ -148,12 +152,19 @@
 				dataType: "json",
 				success: function(data) {				
 
-					console.log(data);
-				
+					//console.log(data);
+					
+					// сомнительный способ убрать пустое место
+					$("#word-sandbox").css("min-height", "0");					
+					
+					// показ текстового сообщения
 					$("#answer-feedback").html(data["cheers"])
 						.show(100);
-					
-					if (data["success"]) {
+
+					// помечаем все слова как по умолчанию правильные
+					$(".draggable_word").removeClass("wrong_answer");				
+						
+					if (data["success"] == 1) {
 						$("#answer-feedback").removeClass("ui-state-error")
 											.addClass("ui-state-highlight");
 					}
@@ -161,7 +172,14 @@
 						$("#answer-feedback").removeClass("ui-state-highlight")
 											.addClass("ui-state-error");
 					}
-				
+					
+					// подсветка неправильных ответов
+					if (data["correction"]) {
+						console.log(data["correction"]);				
+						$.each( data["correction"], function( key, val ) {
+							$("#"+val).addClass("wrong_answer");				
+						});	
+					}					
 				}
 			});
 		}
@@ -197,9 +215,14 @@
 			{
 				$items = json_decode($_POST['items']);
 				$errors = check_result($items);
-				//$errors = $items;
 				
-				$succ = count($errors) ? 0 : 1;
+				$nerr = count($errors);
+				if ($nerr == count($items))
+					$succ = 0;
+				elseif ($nerr == 0)
+					$succ = 1;
+				else
+					$succ = 2;
 			}				
 			else
 			{
@@ -207,7 +230,7 @@
 				$succ = 0;				
 			}
 				
-			$result = array('success' => $succ, 'cheers' => GetCheers($succ), 'feedback' => $errors);
+			$result = array('success' => $succ, 'cheers' => GetCheers($succ), 'correction' => $errors);
 			print json_encode($result);			
 			exit();
 		}

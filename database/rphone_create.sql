@@ -64,7 +64,7 @@ create table `exercises`(`id_unit` int, `id_lesson` int, `id_exercise` int, `id_
 insert into `exercises` values
 (1, 1, 1, 1, '', 'Choose the right syllable pattern for the word.', 'syllable_choose'),
 (1, 1, 2, 2, '', 'Find the odd word based on its syllable pattern and drag it out to the bin.', 'syllable_odd'),
-(1, 1, 3, 3, '', 'Drag each word to the right column.', 'syllable_group'),
+(1, 1, 3, 3, '', 'Drag all words to right columns.', 'syllable_group'),
 (1, 1, 4, 5, '', 'Find the way through the maze. You can move only vertically or horizontally, your steps being guided by the same syllable pattern (i. e. cvc-v or cv-cv).', 'syllable_maze'),
 --
 (1, 2, 1, 7, '', '', ''),
@@ -197,11 +197,12 @@ create table `cheers`(`id_cheers` int, `success` int, `cheers_text` varchar(128)
 
 insert into `cheers` (`success`, `cheers_text`) values
 (0, 'Oops! You''ve made a mistake!' ),
-(0, 'Don''t answer like that again!' ),
+(0, 'Don''t distress us with such answers again!' ),
 (1, 'Perfect answer!' ),
 (1, 'You are correct!' ),
 (1, 'Good job!' ),
-(2, 'Some of answers are correct.');
+(2, 'Ummm... some of answers are not correct.'),
+(2, 'Your answer is partially correct.');
 
 drop table if exists `rules`;
 create table `rules`(

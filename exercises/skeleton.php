@@ -10,7 +10,7 @@
 		# блок для размещения содержимого 
 		echo '<div id="exercise-content"></div>';
 		# блок для размещения кнопок 		
-		echo '<div id="control-buttons">';
+		echo '<div id="control-buttons" style="padding:0.4em">';
 
 			echo '<button id="btn_check">Check</button>';
 			echo '<button id="btn_procceed">Next</button>';		
@@ -21,6 +21,8 @@
 		# блок для помощи
 		# Вопрос: заполнять этот блок правилами сразу или ждать нажатия Help, как сделано сейчас?
 		echo '<div id="rule_dialog" title="Summary of the rules"></div>';
+		
+		echo '<div id="warning-message" title="Warning"><p id="warning-message-text"><span class="ui-icon ui-icon-comment" style="float:left; margin:0 7px 50px 0;"></span></p></div>';
 		
 		# базовый скрипт для управления кнопками
 ?>		
@@ -76,12 +78,12 @@
 					dlg.dialog('option', 'position', 'center');
 				});
 			
-				$( "#rule_dialog" ).dialog( "open" );
+				$("#rule_dialog").dialog( "open" );
 				event.preventDefault();
 			});		
 			
 			// модальный диалог с правилами
-			$( "#rule_dialog" ).dialog({
+			$("#rule_dialog").dialog({
 				autoOpen: false,
 				resizable: false,
 				//draggable: false,
@@ -95,7 +97,19 @@
 						}
 					}
 				]
-			});		
+			});	
+
+			//модальное окно для вывода предупреждений при неправильных действиях
+			$( "#warning-message" ).dialog({
+				autoOpen: false,
+				resizable: false,
+				modal: true,
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});			
 
 		})(jQuery);
 	</script>
