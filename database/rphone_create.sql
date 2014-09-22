@@ -67,9 +67,9 @@ insert into `exercises` values
 (1, 1, 3, 3, '', 'Drag all words to right columns.', 'syllable_group'),
 (1, 1, 4, 5, '', 'Find the way through the maze. You can move only vertically or horizontally, your steps being guided by the same syllable pattern (i. e. cvc-v or cv-cv).', 'syllable_maze'),
 --
-(1, 2, 1, 7, '', '', ''),
-(1, 2, 2, 2, '', '', ''),
-(1, 2, 3, 5, '', '', ''),
+(1, 2, 1, 7, '', 'Type a letter or two to form a word with the vowel of the same type (long or short) as in the words given.', 'vowel_fill'),
+(1, 2, 2, 2, '', 'Tick the word that is odd in the list below. Pay attention to the duration of the vowels', 'vowel_odd'),
+(1, 2, 3, 5, '', 'Find the way through the maze. You can move only vertically or horizontally, your steps being guided by the same vowel duration (i. e. long or short vowel)', 'vowel_maze'),
 -- ==============================================================================
 (2, 1, 1, 1, 'Try to count', 'How many stresses does the word below have?', ''),
 (2, 1, 2, 3, 'Choose pattern', 'Group the words according to their stress pattern. Drag them to the right box.', ''),

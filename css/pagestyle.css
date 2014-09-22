@@ -60,6 +60,17 @@ ul {
 	background: #eee;
 }
 
+.maze_table {
+	border: 1px solid;
+	border-color: #060;
+	border-collapse: collapse;
+}
+
+.maze_table td{
+	border: 1px solid #060;
+	padding: 0.2em;
+}
+
 .expanded {
 	list-style-image:url(../collapse.png);
 }

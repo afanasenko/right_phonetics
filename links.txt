@@ -1,0 +1,7 @@
+http://esl.about.com/od/speakingenglish/a/8wspatterns.htm
+http://esl.about.com/od/speakingenglish/a/8wspatterns.htm
+
+удлинить описание упражения
+добавить хинт и ноту.
+ALTER TABLE  `exercises` ADD  `hint` TEXT NULL DEFAULT NULL AFTER  `name_internal` ,
+ADD  `note` VARCHAR( 255 ) NULL DEFAULT NULL AFTER  `hint` ;
