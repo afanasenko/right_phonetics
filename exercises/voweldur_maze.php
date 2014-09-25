@@ -8,8 +8,8 @@
 	// 1. Выборка данных для формирования содержимого
 	function get_working_set()
 	{
-		$ptn1 = 1 + rand() % 2 ;
-		$ptn2 = $ptn1 == 1 ? 2 : 1;
+		$ptn1 = rand() % 2 ;
+		$ptn2 = $ptn1 == 1 ? 0 : 1;
 		$patterns = array(0 => $ptn1, 1 => $ptn2);
 		
 		$nwords = 15;		
@@ -17,7 +17,7 @@
 		
 		foreach($patterns as $p)
 		{
-			$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=' . $p . ' ORDER BY RAND() LIMIT ' . $nwords . ';';
+			$query = 'SELECT * FROM `vowel_duration` WHERE `long_vowel`=' . $p . ' ORDER BY RAND() LIMIT ' . $nwords . ';';
 		
 			$res = mysql_query($query);
 			if (!$res)
@@ -37,23 +37,22 @@
 	function check_result($words)
 	{
 		$ref_word = $words[0];
-		$query = 'SELECT `pattern` FROM `syllable_choose` WHERE `id`=' . $ref_word . ';';		
+		$query = 'SELECT `long_vowel` FROM `vowel_duration` WHERE `id`=' . $ref_word . ';';		
 		$res = mysql_query($query);
 		if (!$res)
 			return false;
 			
 		$row = mysql_fetch_row($res);
 		if ($row)
-			$sylltype = $row[0];
+			$cue = $row[0];
 		else
 			return false;
 		
-
 		$wrong_words = array();
 
 		foreach ($words as $val)		
 		{
-			$query = 'SELECT * FROM `syllable_choose` WHERE `id`=' . $val . ' AND `pattern`=' . $sylltype . ';';
+			$query = 'SELECT * FROM `vowel_duration` WHERE `id`=' . $val . ' AND `long_vowel`=' . $cue . ';';
 
 			$res = mysql_query($query);
 			if (!$res)
@@ -82,6 +81,8 @@
 		//Функции размещаются в глобальном пространстве имен
 		function GenerateMaze() {
 			var w = []
+			var count_positive = 0;
+			
 			for (var i = 0; i < 25; i++) {
 				w.push(0);
 			}
@@ -123,12 +124,13 @@
 				w[newY * 5 + newX] = 1;
 				x = newX;
 				y = newY;
+				count_positive++;
 				if (newX == 4) {
 					break;
 				}
 
 			}
-			return { points: w, start: { x: startX, y: startY }, end: { x: x, y: y} };
+			return { points: w, start: { x: startX, y: startY }, end: { x: x, y: y}, count: count_positive };
 		}		
 		
 		
