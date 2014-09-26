@@ -137,18 +137,18 @@ insert into `vowel_duration` (`long_vowel`, `word`) values
 (1, "pride"), (1, "side");
 
 drop table if exists `vowel_fill`;
-create table `vowel_fill` (`id` int primary key auto_increment, `word` varchar(64), `long_vowel` tinyint, `replacement` varchar(64));
+create table `vowel_fill` (`id` int primary key auto_increment, `word` varchar(64), `long_vowel` tinyint);
 
-insert into `vowel_fill` (`long_vowel`, `word`, `replacement`) values
-(0, "pi[ck]", "ss|t|ck|p"),
-(0, "bi[t]", "t"),
-(0, "ti[p]", "c|ck|t|p"),
-(0, "si[t]", "p|t|ck|x"),
-(1, "lea[d]", "d|se|ve"),
-(1, "tea[se]", "se"),
-(1, "pea[k]", "k|ce|r|rl"),
-(1, "bree[d]", "d"),
-(1, "bea[d]", "d");
+insert into `vowel_fill` (`long_vowel`, `word`) values
+(0, "pi[ss|t|ck|p]"),
+(0, "bi[t]"),
+(0, "ti[c|ck|t|p]"),
+(0, "si[p|t|ck|x]"),
+(1, "lea[k|p|d|se|ve]"),
+(1, "tea[se]"),
+(1, "pea[k|ce|r|rl]"),
+(1, "bree[d]"),
+(1, "bea[d|ch|r]");
 
 -- --------------------------------------------------------
 --
@@ -224,6 +224,7 @@ create table `rules`(
 insert into `rules` (`rule_unit`, `rule_lesson`, `rule_number`, `rule_text`) values
 (1,1,1,'The checked vowels (/æ/, /ɒ/, /ɪ/, /e/, /ʊ/, /ʌ/) can be found only in a close syllable (cvc). While the free vowels (diphthongs + tense vowels + /ə/ + /ɪ/, /ʊ/ in unstressed position) can be found both in a close syllable (cvc) and in an open syllable (cv).'),
 (1,1,2,'The intense checked vowels (/æ/, /ɒ/, /ɪ/, /e/, /ʊ/, /ʌ/) can be found only in a close syllable (cvc). While the free vowels (diphthongs + tense vowels + /ə/ + /ɪ/, /ʊ/ in unstressed position) can be found both in a close syllable (cvc) and in an open syllable (cv).'),
-(1,2,1,'Voice noise consonants in the English language are considered to be weak, consequently, a vowel before such a consonant is a long one. Voiceless noise consonants in the English language are considered to be strong, consequently, a vowel before such a consonant is a short one.'),
+(1,2,1,'Voice noise consonants in the English language are considered to be weak, consequently, a vowel before such a consonant is a long one.'),
+(1,2,2,'Voiceless noise consonants in the English language are considered to be strong, consequently, a vowel before such a consonant is a short one.'),
 (5,4,1,'Sonants /r/, /l/, /w/, /j/ are pronounced with noise if preceded by a strong consonant, i. d. /p/, /t/, /k/.'),
 (5,4,2,'Sonants /n/, /l/, /m/ form a separate syllable if they are found in one of the following positions:&lt;br&gt;1) at the end of the word after a noise consonant (/p/, /t/, /k/, /b/, /d/, /g/);&lt;br&gt;2) in the middle of the word after a noise consonant (/p/, /t/, /k/, /b/, /d/, /g/).');

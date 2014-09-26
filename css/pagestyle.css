@@ -68,7 +68,16 @@ ul {
 
 .maze_table td{
 	border: 1px solid #060;
-	padding: 0.2em;
+	padding: 0.4em;
+}
+
+.maze_elem_selected {
+	background: #EBF7AF;
+}
+
+.maze_elem_wrong {
+	color: #600000;
+	background: #ECC;
 }
 
 .expanded {
