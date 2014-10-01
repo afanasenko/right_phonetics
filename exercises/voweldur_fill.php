@@ -43,20 +43,23 @@
 	
 	//------------------------------------------------------------------------------
 	// 2. Проверка ответа
-	function check_result($word_id, $ending)
+	function check_result($word_id, $ending, &$corr)
 	{
-		$query = 'SELECT `word`, FROM `vowel_fill` WHERE `id`=' . $word_id . ';';	
+		$query = 'SELECT `word` FROM `vowel_fill` WHERE `id`=' . $word_id . ';';	
 		$res = mysql_query($query);		
 		
 		if (!$res or mysql_num_rows($res) != 1)
 			return false;	
 
+		$row = mysql_fetch_row($res);
+			
 		$valid = array();
-		if (!preg_match_all('/\[(.+)\]/', $row['word'], $valid))
+		if (!preg_match_all('/(\w+)/', $row[0], $valid))
 			return false;
 		
+		$corr = $valid[0] ;		
 		
-		foreach($valid as $token)
+		foreach($valid[0] as $token)
 		{
 			if (!strcmp($token, $ending))
 				return true;
@@ -103,7 +106,9 @@
 		// 5. Проверка результата
 		function RP_CheckResult() {
 			var answer = $('#gap').val();
-			var word_id = $("#word_id").text();
+			var word_id = $("#word_id").val();
+			console.log(word_id);
+			console.log(answer);
 			
 			if (answer) {
 				// запрос результата
@@ -159,9 +164,10 @@
 		{
 			$word_id = $_POST['word_id'];
 			$ending = $_POST['ending'];
+			$corr = array();
 		
-			$succ = intval(check_result($word_id, $ending));
-			$result = array('success' => $succ, 'cheers' => GetCheers($succ));
+			$succ = intval(check_result($word_id, $ending, $corr));
+			$result = array('success' => $succ, 'cheers' => GetCheers($succ), 'correction' => $corr);
 			print json_encode($result);			
 			exit();
 		}
