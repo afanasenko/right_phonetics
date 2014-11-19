@@ -13,6 +13,10 @@ ul {
 	/*list-style-image:url(../expand.png);*/
 }
 
+body {
+	background: #eee;
+}
+
 .collapsible {
 	color:#006000;
 	font-weight:800;
@@ -107,7 +111,7 @@ li.exercise-handle.selected{
 
  #answer-feedback {
 	padding: 1em;
-	margin: .5em;
+	margin: .1em;
 	text-align:center;
  }
 
@@ -131,6 +135,7 @@ li.exercise-handle.selected{
 	min-width: 16em;	
 	max-width: 36em;	
 	min-height: 600px;	
+	background: white;
 	/*border: 1px solid gray;*/
 }
 
@@ -188,5 +193,5 @@ legend {
 .button_pane {
 	padding:1em;
 	margin-top:0;
-	background:#ccdddd;
+	background:#cdd;
 }

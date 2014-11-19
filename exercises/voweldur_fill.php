@@ -57,11 +57,11 @@
 		if (!preg_match_all('/(\w+)/', $row[0], $valid))
 			return false;
 		
-		$corr = $valid[0] ;		
+		$corr = $valid[0];		
 		
-		foreach($valid[0] as $token)
+		foreach($valid[0] as $n => $token)
 		{
-			if (!strcmp($token, $ending))
+			if (!strcmp($token, $ending) and $n > 0)
 				return true;
 		}
 		return false;

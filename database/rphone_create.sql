@@ -76,7 +76,7 @@ insert into `exercises` values
 (2, 1, 3, 2, 'Tick', 'Tick the word which has a different stress pattern:', ''),
 (2, 1, 4, 6, 'Try to mark', 'Mark the correct stress pattern in the word below:', ''),
 --
-(2, 2, 1, 8, 'Listen & Distinguish', 'Listen to the recording and choose the correct part of speach.', ''),
+(2, 2, 1, 8, 'Listen & Distinguish', 'Listen to the recording and choose the correct part of speach.', 'nounverb_choose'),
 (2, 2, 2, 6, 'Mark the stress', 'Put stress signs in the right places.', ''),
 --
 (2, 3, 1, 1, 'Find a compound noun', 'Which of the following is a compound noun?', ''),
@@ -226,5 +226,6 @@ insert into `rules` (`rule_unit`, `rule_lesson`, `rule_number`, `rule_text`) val
 (1,1,2,'The intense checked vowels (/æ/, /ɒ/, /ɪ/, /e/, /ʊ/, /ʌ/) can be found only in a close syllable (cvc). While the free vowels (diphthongs + tense vowels + /ə/ + /ɪ/, /ʊ/ in unstressed position) can be found both in a close syllable (cvc) and in an open syllable (cv).'),
 (1,2,1,'Voice noise consonants in the English language are considered to be weak, consequently, a vowel before such a consonant is a long one.'),
 (1,2,2,'Voiceless noise consonants in the English language are considered to be strong, consequently, a vowel before such a consonant is a short one.'),
+(2,2,1,'Noun/Verb two-syllable "graphic twins" (words of the same visual form) of non-English origin usually have different stress patterns: in verbs the stress, as a rule, falls on the second syllable, whereas in nouns - on the first one. Moreover, such nouns often have secondary stress on the second syllable.'),
 (5,4,1,'Sonants /r/, /l/, /w/, /j/ are pronounced with noise if preceded by a strong consonant, i. d. /p/, /t/, /k/.'),
 (5,4,2,'Sonants /n/, /l/, /m/ form a separate syllable if they are found in one of the following positions:&lt;br&gt;1) at the end of the word after a noise consonant (/p/, /t/, /k/, /b/, /d/, /g/);&lt;br&gt;2) in the middle of the word after a noise consonant (/p/, /t/, /k/, /b/, /d/, /g/).');

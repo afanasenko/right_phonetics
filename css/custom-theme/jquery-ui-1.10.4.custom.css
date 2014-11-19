@@ -659,7 +659,7 @@ body .ui-tooltip {
 /* Component containers
 ----------------------------------*/
 .ui-widget {
-	font-family: Gill Sans,Arial,sans-serif;
+	font-family: Gill Sans MT,Arial,sans-serif;
 	font-size: 1.2em;
 }
 .ui-widget .ui-widget {
@@ -669,7 +669,7 @@ body .ui-tooltip {
 .ui-widget select,
 .ui-widget textarea,
 .ui-widget button {
-	font-family: Gill Sans,Arial,sans-serif;
+	font-family: Gill Sans MT,Arial,sans-serif;
 	font-size: 1em;
 }
 .ui-widget-content {
@@ -749,7 +749,7 @@ body .ui-tooltip {
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight {
 	border: 1px solid #b4d100;
-	background: #ffff38 url("images/ui-bg_dots-medium_80_ffff38_4x4.png") 50% 50% repeat;
+	background: #13e649 url("images/ui-bg_dots-medium_80_green_4x4.png") 50% 50% repeat;
 	color: #363636;
 }
 .ui-state-highlight a,
