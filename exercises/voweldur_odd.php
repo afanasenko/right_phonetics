@@ -101,12 +101,12 @@
 						if (data["success"]) {
 							$("#answer-feedback").removeClass("ui-state-error")
 												.addClass("ui-state-highlight");
-							$("#trashbin").html('<img src="./img/bin_happy.gif">');
+							$("#trashbin").html('<img src="./img/bin_happy.png">');
 						}
 						else {
 							$("#answer-feedback").removeClass("ui-state-highlight")
 												.addClass("ui-state-error");
-							$("#trashbin").html('<img src="./img/bin_sad.gif">');
+							$("#trashbin").html('<img src="./img/bin_sad.png">');
 						}
 					
 					}
@@ -137,7 +137,7 @@
 				}
 			});
 			
-			$("#exercise-content").append('<div><div id="trashbin"><img src="./img/bin.gif"></div></div>');
+			$("#exercise-content").append('<div><div id="trashbin"><img src="./img/bin.png"></div></div>');
 			$( "#trashbin" ).droppable({
 				accept : ".draggable_word",
 				drop : function(event, ui) {

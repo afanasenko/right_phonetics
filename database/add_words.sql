@@ -10,14 +10,14 @@ insert into `parts_of_speech` values
 (2,'verb'),
 (3,'adjective');
 
-create table if not exists `common_dict` (
+create table if not exists `long_words` (
 	`id` int primary key auto_increment,
 	`word` varchar(64),
 	`pattern` varchar(64),
 	`speechpart` tinyint,
 	`sound` varchar(64));
 	
-insert into `common_dict` (`word`, `pattern`, `speechpart`, `stress_count`) values
+insert into `long_words` (`word`, `pattern`, `speechpart`, `stress_count`) values
 ('university', '_u|ni^ver|si|ty', 1, 2),
 ('characteristic', '_char|ac|te^ris|tic', 3, 2),
 ('constitution', '_con|sti^tu|tion', 1, 2),
