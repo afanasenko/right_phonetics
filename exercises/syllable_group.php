@@ -213,7 +213,9 @@
 		{
 			if (isset($_POST['items']))
 			{
-				$items = json_decode($_POST['items']);
+				// true для преобразования объекта в array, функции check_result это безразлично,
+				// но у объекта не посчитать число элементов count($items)
+				$items = json_decode($_POST['items'], true);
 				$errors = check_result($items);
 				
 				$nerr = count($errors);

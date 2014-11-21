@@ -5,3 +5,12 @@ http://esl.about.com/od/speakingenglish/a/8wspatterns.htm
 добавить хинт и ноту.
 ALTER TABLE  `exercises` ADD  `hint` TEXT NULL DEFAULT NULL AFTER  `name_internal` ,
 ADD  `note` VARCHAR( 255 ) NULL DEFAULT NULL AFTER  `hint` ;
+
+авторизация
+приветственная страничка
+стили для вывода результатов
+баг с перетаскиванием
+обратная связь для упражнения
+стиль меню
+крокодил
+прозрачный цвет для иконок

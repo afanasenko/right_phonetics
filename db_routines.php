@@ -86,17 +86,9 @@
 				'token' => $row['name_internal'],
 				'uid' => $idex + 100*$lesson + 10000*$unit); //уникальный идентификатор (FIXME:name_internal)
 				
-			# при отсутствии у упражнения собственного названия именуем его в зависимости от типа
+			# при отсутствии у упражнения собственного названия ...
 			if (empty($row['name_exercise']))
-			{
-				$stmt = 'SELECT `name_exertype` FROM `exercise_types` WHERE `id_exertype`=' . $row['id_type'] . ';';		
-				$res2 = mysql_query($stmt);
-				if (!$res)
-					handle_db_error($stmt);		
-				
-				$et = mysql_fetch_row($res2);
-				$items[$idex]['title'] = $et[0];
-			}			
+				$items[$idex]['title'] = 'No name';
 		}		
 		
 		return $items;

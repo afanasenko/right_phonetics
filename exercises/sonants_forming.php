@@ -102,7 +102,9 @@
 				});
 			}		
 			else {
-				alert('Make your choice!');
+				$("#warning-message-text").html("Please, make your choice!");
+				$("#warning-message").dialog( "open" );			
+				return;
 			}
 		}
 	</script>

@@ -8,11 +8,9 @@
 	// 1. Выборка данных для формирования содержимого
 	function get_working_set()
 	{
-		$cue_pattern = 1 + rand() % 2 ;
-		$antipattern = $cue_pattern == 1 ? 2 : 1;
-		$nwords = 5;		
+		$nwords = 10;		
 	
-		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=1 ORDER BY RAND() LIMIT ' . $nwords . ';';
+		$query = 'SELECT * FROM `long_words` WHERE `stress_count`=2 ORDER BY RAND() LIMIT ' . $nwords . ';';
 		
 		$res = mysql_query($query);
 		if (!$res)
@@ -22,29 +20,9 @@
 
 		while ($row = mysql_fetch_assoc($res))
 		{
-			$key = rand();
-			while (array_key_exists($key, $result))
-				$key = rand();
-			$result[$key] = $row;
+			$result[$row['id']] = $row['word'];
 		}
-		
-		$query = 'SELECT * FROM `syllable_choose` WHERE `pattern`=2 ORDER BY RAND() LIMIT ' . $nwords . ';';
-		
-		$res = mysql_query($query);
-		if (!$res)
-			return false;
-			
-		while ($row = mysql_fetch_assoc($res))
-		{
-			$key = rand();
-			while (array_key_exists($key, $result))
-				$key = rand();
 
-			$result[$key] = $row;
-		}		
-
-		// Сортировка по случайному ключу - возможно, не лучший вариант, но дает результат.
-		ksort($result);
 		return $result;	
 	}
 	
@@ -56,14 +34,35 @@
 
 		foreach ($items as $key => $val)		
 		{
-			$query = 'SELECT * FROM `syllable_choose` WHERE `id`=' . $key . ' AND `pattern`=' . $val . ';';
-
+			$query = 'SELECT `pattern` FROM `long_words` WHERE `id`=' . $key . ';';
 			$res = mysql_query($query);
 			if (!$res)
 				return false;
+
+			$row = mysql_fetch_row($res);
+			if ($row)
+			{
+				$valid = array();
+				if (!preg_match_all('/[_^]/', $row[0], $valid))
+					return false;		
+
+				$corr = $valid[0];
+					
+				$str = '';
+				foreach($corr as $tok)
+					$str .= $tok;
+					
+				//$wrong_words[] = $str;
+					
 				
-			if (!mysql_num_rows($res))
+				if (strcmp($str, $val))
+					$wrong_words[] = $key;
+			}
+			else
+			{
+				//нештатная ситуация
 				$wrong_words[] = $key;
+			}
 		}
 
 		return $wrong_words;
@@ -88,7 +87,7 @@
 		// 4. Обработчик загрузки данных с сервера в результате выполнения запроса action=fetch
 		function RP_OnLoadContent(data) {
 		
-			console.log(data);	
+			//console.log(data);	
 			$("#exercise-content").append('<div id="word-sandbox" style="min-height:8em"></div>');
 			
 			$.each( data, function( key, val ) {
@@ -102,7 +101,7 @@
 					.addClass("draggable_word");				
 			});			
 			
-			$("#exercise-content").append("<table border='1' cellspacing='0' cellpadding='0' style='width:18em'><tr><td width='50%'>(c)cvc-v</td><td width='50%'>(c)cv-cv</td></tr><tr><td height='2em'><div class='dropbin_wrap'><div class='dropbin' syll-pattern='1'></div></div></td><td height='2em'><div class='dropbin_wrap'><div class='dropbin' syll-pattern='2'></div></div></td></tr></table>");			
+			$("#exercise-content").append("<table border='1' cellspacing='0' cellpadding='0' style='width:18em'><tr><td width='50%'>, '</td><td width='50%'>' ,</td></tr><tr><td height='2em'><div class='dropbin_wrap'><div class='dropbin' stress-pattern='_^'></div></div></td><td height='2em'><div class='dropbin_wrap'><div class='dropbin' stress-pattern='^_'></div></div></td></tr></table>");			
 			
 			$( "div.dropbin" ).droppable({
 				accept : ".draggable_word",
@@ -125,12 +124,12 @@
 			$("#exercise-content").find("div.dropbin").each(function() {
 			
 				var container = $(this);
-				var syll_pattern = container.attr("syll-pattern");
+				var pattern = container.attr("stress-pattern");
 				container.children().each(function() {
 					cnt++;
 					var w = $(this);
 					var wid = w.attr("id");
-					chosen_items[wid] = syll_pattern;
+					chosen_items[wid] = pattern;
 				});
 			});
 
@@ -152,7 +151,7 @@
 				dataType: "json",
 				success: function(data) {				
 
-					//console.log(data);
+					console.log(data);
 					
 					// сомнительный способ убрать пустое место
 					$("#word-sandbox").css("min-height", "0");					
@@ -193,27 +192,21 @@
 		// 6. Ответ на запрос содержимого
 		elseif (!strcmp($_POST['action'], 'fetch'))
 		{
-			$res = get_working_set();
-			if (!$res)
+			$result = get_working_set();
+			if (!$result)
 				die("error");
 
-			$result = array();
-				
-			foreach ($res as $val)
-			{
-				$wid = $val['id'];
-				$result[$wid] = $val['word'];
-			}	
-			
 			print json_encode($result);
 		}
 		//-----------------------------------------------------------------------------		
-		// 6. Ответ на запрос проверки результата
+		// 7. Ответ на запрос проверки результата
 		elseif (!strcmp($_POST['action'], 'check'))
 		{
 			if (isset($_POST['items']))
 			{
-				$items = json_decode($_POST['items']);
+				// true для преобразования объекта в array, функции check_result это безразлично,
+				// но у объекта не посчитать число элементов count($items)			
+				$items = json_decode($_POST['items'], true);
 				$errors = check_result($items);
 				
 				$nerr = count($errors);
